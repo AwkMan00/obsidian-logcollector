@@ -1,6 +1,8 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
+import path from 'path'
+import fs from 'fs';
 import { exec } from "child_process";
 
 const banner = `/*
@@ -10,32 +12,19 @@ if you want to view the source, please visit the github repository of this plugi
 `;
 
 const isProduction = process.argv[2] === "production";
-const rsyncPlugin = {
-  name: "rsyncPlugin",
-  setup(build) {
-    build.onEnd((result) => {
-      if (process.env.USER !== "czottmann" || isProduction) {
-        return;
-      }
 
-      exec(
-        "../bin/sync-current-plugins-to-workbench-vault.fish",
-        (error, stdout, stderr) => {
-          if (error) {
-            console.log(`exec error: ${error}`);
-          }
-          if (stderr) {
-            console.log(stderr);
-          } else {
-            console.log(
-              "[watch] sync'd via `../bin/sync-current-plugins-to-workbench-vault.fish`",
-            );
-          }
-        },
-      );
-    });
-  },
-};
+const copyManifestPlugin = () => ({
+    name: 'copy-manifest-plugin',
+    setup(build) {
+        build.onEnd(async () => {
+            try {
+                fs.cpSync('./manifest.json', './dist/manifest.json');
+            } catch (e) {
+                console.error('Failed to copy file:', e);
+            }
+        });
+    },
+});
 
 const context = await esbuild.context({
   banner: {
@@ -64,8 +53,8 @@ const context = await esbuild.context({
   logLevel: "info",
   sourcemap: isProduction ? false : "inline",
   treeShaking: true,
-  outfile: "main.js",
-  plugins: [rsyncPlugin],
+  outfile: path.join('./dist', 'main.js'),
+  plugins: [copyManifestPlugin()],
 });
 
 if (isProduction) {

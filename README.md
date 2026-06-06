@@ -1,9 +1,14 @@
-# Logstravaganza
+# Logcollector
 
-This is a plugin for [Obsidian](https://obsidian.md) that logs all console output and uncaught exceptions to a note in a vault.  **It's mainly aimed at developers.**
+
+This is a plugin for [Obsidian](https://obsidian.md) that logs all console output and uncaught exceptions to a note (inside or outside a vault).  **It's mainly aimed at developers.**
 
 As such, it's also useful for letting your plugin's users help you debug your plugin's issues: Ask your customers to install this plugin, then send you the resulting log when they report a bug.
 
+This plugin is a fork of [Logstravaganza](https://github.com/czottmann/obsidian-logstravaganza) plugin (version 2.3.0), but with the following added capabilities:
+    - Place the log file outside the vault (avoids crashing Obsidian if there are too many entries).
+    - Save timestamps in local time (default) or UTC format.
+    - Write messages in plain text format.
 
 ## What it does
 
@@ -13,6 +18,13 @@ As such, it's also useful for letting your plugin's users help you debug your pl
     - [NDJSON](https://github.com/ndjson/ndjson-spec), a plain text format that can be read by humans and machines alike. Every line in the file is a JSON object. Think CSV, but with JSON.
     - Markdown file containing a table.
     - Markdown file containing code blocks.
+    - Plain text (no formatting applied).
+
+## Known issues
+
+- Time logged in console through `console.timeLog(*label*)` and `console.timeEnd(*label*)` is not shown in log (only the *label*). This is due to the time is not passed in the arguments in `console.timeLog(*label*)` and `console.timeEnd(*label*)` events.
+- When logging outside the vault, filename in bottom of options menu has a non functional link (due to security reasons, links to files outside the vault are not allowed).
+- Worker messages (warnings, errors, etc.) are not captured by this plugin (even though they appear in the console). The main plugin process needs to capture the messages and print them using a `console.*()` call.
 
 
 ## Example output
@@ -25,7 +37,7 @@ The log output will be written to a `console-log.DEVICE-NAME.*` or, optionally, 
 Output file name: `console-log.DEVICE-NAME.ndjson`
 
 ```plaintext
-{"timestamp":"2024-03-24T16:18:04.256Z","level":"info","sender":"plugin:logstravaganza","args":["[Logstravaganza] Proxy set up (v2.0.0)"]}
+{"timestamp":"2024-03-24T16:18:04.256Z","level":"info","sender":"plugin:logcollector","args":["[Logcollector] Proxy set up (v2.0.0)"]}
 {"timestamp":"2024-03-24T16:18:04.419Z","level":"log","sender":"plugin:actions-uri:12152:11","args":[["[Actions URI]","Registered URI handlers:",["actions-uri","actions-uri/command","actions-uri/command/list","actions-uri/command/execute","actions-uri/dataview","actions-uri/dataview/table-query","actions-uri/dataview/list-query","actions-uri/file","actions-uri/file/list","actions-uri/file/get-active","actions-uri/file/open","actions-uri/file/delete","actions-uri/file/trash","actions-uri/file/rename","actions-uri/folder","actions-uri/folder/list","actions-uri/folder/create","actions-uri/folder/rename","actions-uri/folder/delete","actions-uri/folder/trash","actions-uri/info","actions-uri/note-properties","actions-uri/note-properties/get","actions-uri/note-properties/set","actions-uri/note-properties/clear","actions-uri/note-properties/remove-keys","actions-uri/note","actions-uri/note/list","actions-uri/note/get","actions-uri/note/get-first-named","actions-uri/note/get-active","actions-uri/note/open","actions-uri/note/create","actions-uri/note/append","actions-uri/note/prepend","actions-uri/note/touch","actions-uri/note/delete","actions-uri/note/trash","actions-uri/note/rename","actions-uri/note/search-string-and-replace","actions-uri/note/search-regex-and-replace","actions-uri/omnisearch","actions-uri/omnisearch/all-notes","actions-uri/omnisearch/open","actions-uri/daily-note","actions-uri/daily-note/list","actions-uri/daily-note/get-current","actions-uri/daily-note/get-most-recent","actions-uri/daily-note/open-current","actions-uri/daily-note/open-most-recent","actions-uri/daily-note/create","actions-uri/daily-note/append","actions-uri/daily-note/prepend","actions-uri/daily-note/search-string-and-replace","actions-uri/daily-note/search-regex-and-replace","actions-uri/weekly-note","actions-uri/weekly-note/list","actions-uri/weekly-note/get-current","actions-uri/weekly-note/get-most-recent","actions-uri/weekly-note/open-current","actions-uri/weekly-note/open-most-recent","actions-uri/weekly-note/create","actions-uri/weekly-note/append","actions-uri/weekly-note/prepend","actions-uri/weekly-note/search-string-and-replace","actions-uri/weekly-note/search-regex-and-replace","actions-uri/monthly-note","actions-uri/monthly-note/list","actions-uri/monthly-note/get-current","actions-uri/monthly-note/get-most-recent","actions-uri/monthly-note/open-current","actions-uri/monthly-note/open-most-recent","actions-uri/monthly-note/create","actions-uri/monthly-note/append","actions-uri/monthly-note/prepend","actions-uri/monthly-note/search-string-and-replace","actions-uri/monthly-note/search-regex-and-replace","actions-uri/quarterly-note","actions-uri/quarterly-note/list","actions-uri/quarterly-note/get-current","actions-uri/quarterly-note/get-most-recent","actions-uri/quarterly-note/open-current","actions-uri/quarterly-note/open-most-recent","actions-uri/quarterly-note/create","actions-uri/quarterly-note/append","actions-uri/quarterly-note/prepend","actions-uri/quarterly-note/search-string-and-replace","actions-uri/quarterly-note/search-regex-and-replace","actions-uri/yearly-note","actions-uri/yearly-note/list","actions-uri/yearly-note/get-current","actions-uri/yearly-note/get-most-recent","actions-uri/yearly-note/open-current","actions-uri/yearly-note/open-most-recent","actions-uri/yearly-note/create","actions-uri/yearly-note/append","actions-uri/yearly-note/prepend","actions-uri/yearly-note/search-string-and-replace","actions-uri/yearly-note/search-regex-and-replace","actions-uri/search","actions-uri/search/all-notes","actions-uri/search/open","actions-uri/tags","actions-uri/tags/list","actions-uri/vault","actions-uri/vault/open","actions-uri/vault/close","actions-uri/vault/info","actions-uri/vault/list-all-files","actions-uri/vault/list-non-notes-files"]]]}
 {"timestamp":"2024-03-24T16:18:04.530Z","level":"time","sender":"plugin:omnisearch:50:7444","args":[["Omnisearch - Indexing total time"]]}
 {"timestamp":"2024-03-24T16:18:04.530Z","level":"log","sender":"plugin:omnisearch:50:7571","args":[["Omnisearch - 66 files total"]]}
@@ -53,7 +65,7 @@ Output file name: `console-log.DEVICE-NAME.md`
 ```plaintext
 | Timestamp | Originator | Level | Message |
 | --------- | ---------- | ----- | ------- |
-| 2024-03-23T17:25:42.973Z | plugin:logstravaganza | info | \[Logstravaganza] Proxy set up (v1.3.0) |
+| 2024-03-23T17:25:42.973Z | plugin:logcollector | info | \[Logcollector] Proxy set up (v1.3.0) |
 | 2024-03-23T17:25:43.109Z | plugin:actions-uri:12152:11 | log | \["\[Actions URI]","Registered URI handlers:",\["actions-uri","actions-uri/command","actions-uri/command/list","actions-uri/command/execute","actions-uri/dataview","actions-uri/dataview/table-query","actions-uri/dataview/list-query","actions-uri/file","actions-uri/file/list","actions-uri/file/get-active","actions-uri/file/open","actions-uri/file/delete","actions-uri/file/trash","actions-uri/file/rename","actions-uri/folder","actions-uri/folder/list","actions-uri/folder/create","actions-uri/folder/rename","actions-uri/folder/delete","actions-uri/folder/trash","actions-uri/info","actions-uri/note-properties","actions-uri/note-properties/get","actions-uri/note-properties/set","actions-uri/note-properties/clear","actions-uri/note-properties/remove-keys","actions-uri/note","actions-uri/note/list","actions-uri/note/get","actions-uri/note/get-first-named","actions-uri/note/get-active","actions-uri/note/open","actions-uri/note/create","actions-uri/note/append","actions-uri/note/prepend","actions-uri/note/touch","actions-uri/note/delete","actions-uri/note/trash","actions-uri/note/rename","actions-uri/note/search-string-and-replace","actions-uri/note/search-regex-and-replace","actions-uri/omnisearch","actions-uri/omnisearch/all-notes","actions-uri/omnisearch/open","actions-uri/daily-note","actions-uri/daily-note/list","actions-uri/daily-note/get-current","actions-uri/daily-note/get-most-recent","actions-uri/daily-note/open-current","actions-uri/daily-note/open-most-recent","actions-uri/daily-note/create","actions-uri/daily-note/append","actions-uri/daily-note/prepend","actions-uri/daily-note/search-string-and-replace","actions-uri/daily-note/search-regex-and-replace","actions-uri/weekly-note","actions-uri/weekly-note/list","actions-uri/weekly-note/get-current","actions-uri/weekly-note/get-most-recent","actions-uri/weekly-note/open-current","actions-uri/weekly-note/open-most-recent","actions-uri/weekly-note/create","actions-uri/weekly-note/append","actions-uri/weekly-note/prepend","actions-uri/weekly-note/search-string-and-replace","actions-uri/weekly-note/search-regex-and-replace","actions-uri/monthly-note","actions-uri/monthly-note/list","actions-uri/monthly-note/get-current","actions-uri/monthly-note/get-most-recent","actions-uri/monthly-note/open-current","actions-uri/monthly-note/open-most-recent","actions-uri/monthly-note/create","actions-uri/monthly-note/append","actions-uri/monthly-note/prepend","actions-uri/monthly-note/search-string-and-replace","actions-uri/monthly-note/search-regex-and-replace","actions-uri/quarterly-note","actions-uri/quarterly-note/list","actions-uri/quarterly-note/get-current","actions-uri/quarterly-note/get-most-recent","actions-uri/quarterly-note/open-current","actions-uri/quarterly-note/open-most-recent","actions-uri/quarterly-note/create","actions-uri/quarterly-note/append","actions-uri/quarterly-note/prepend","actions-uri/quarterly-note/search-string-and-replace","actions-uri/quarterly-note/search-regex-and-replace","actions-uri/yearly-note","actions-uri/yearly-note/list","actions-uri/yearly-note/get-current","actions-uri/yearly-note/get-most-recent","actions-uri/yearly-note/open-current","actions-uri/yearly-note/open-most-recent","actions-uri/yearly-note/create","actions-uri/yearly-note/append","actions-uri/yearly-note/prepend","actions-uri/yearly-note/search-string-and-replace","actions-uri/yearly-note/search-regex-and-replace","actions-uri/search","actions-uri/search/all-notes","actions-uri/search/open","actions-uri/tags","actions-uri/tags/list","actions-uri/vault","actions-uri/vault/open","actions-uri/vault/close","actions-uri/vault/info","actions-uri/vault/list-all-files","actions-uri/vault/list-non-notes-files"]] |
 | 2024-03-23T17:25:43.168Z | plugin:omnisearch:50:7444 | time | \["Omnisearch - Indexing total time"] |
 | 2024-03-23T17:25:43.168Z | plugin:omnisearch:50:7571 | log | \["Omnisearch - 66 files total"] |
@@ -68,9 +80,9 @@ Output file name: `console-log.DEVICE-NAME.md`
 
     ```
     time: 2024-05-06T17:31:06.874Z
-    from: plugin:logstravaganza
+    from: plugin:logcollector
     level: info
-    [Logstravaganza] Proxy set up (v2.0.1)
+    [Logcollector] Proxy set up (v2.0.1)
     ```
 
     ```
@@ -109,41 +121,46 @@ Output file name: `console-log.DEVICE-NAME.md`
 
 In reading mode, the output will be displayed as separate MD code blocks.
 
+### Using the plain text formatter
+
+Output file name: `console-log.DEVICE-NAME.txt`
+
+```plaintext
+2026-05-03T13:09:54.039 plugin:logcollector info [Logcollector] Proxy set up (v3.0.0)
+2026-05-03T13:09:57.567 plugin:omnisearch:136:8916 time Indexing total time
+2026-05-03T13:19:06.658 plugin:omnisearch:136:8994 debug List files ALL Numfiles 2 test1.md,test2.md
+2026-05-03T13:09:58.050 plugin:omnisearch:136:9237 debug Cache is enabled
+2026-05-03T13:09:58.051 plugin:omnisearch:136:9323 time Loading index from cache
+2026-05-03T13:09:58.283 plugin:omnisearch:134:179565 log Omnisearch - No cache found
+```
+
+This output does not apply any formatting or character scaping. It can be viewed with any text editor and easily parsed with text parsing tools (e.g. `grep` or `awk`).
+
 ## Caveats
 
 Naturally, the plugin can't know about past console output.  It can only log what happens after when it's activated/enabled.
 
-**Please note:** When this plugin is active and proxying `console` calls, all output to the actual console will appear as coming from `plugin:logstravaganza`.
-
- For discussions, please visit the [Plugin Forum](https://forum.actions.work/c/logstravaganza-obsidian-plugin/8) ("Log in with GitHub" is enabled).
+**Please note:** When this plugin is active and proxying `console` calls, all output to the actual console will appear as coming from `plugin:logcollector`.
 
 
 ## Bug Reports & Discussions
 
-Bug reports and feature requests are welcome, feel free to [open an issue](https://github.com/czottmann/obsidian-logstravaganza/issues) here on GitHub — thank you!
-
-I've moved all plugin **discussions** to the ActionsDotWork Forum which is a hub for both my Obsidian plugins and the macOS/iOS productivity apps I'm building: [Carlo's Obsidian Plugins - ActionsDotWork Forum](https://forum.actions.work/c/obsidian-plugins/8).
-
-The forum supports single-sign-on via GitHub, Apple and Google, meaning you can log in with your GitHub account.
+Bug reports and feature requests are welcome, feel free to [open an issue](https://github.com/AwkMan00/obsidian-logcollector/issues) here on GitHub — thank you!
 
 
 ## Installation
 
-1. Search for "Logstravaganza" in Obsidian's community plugins browser. ([This link should bring it up.](https://obsidian.md/plugins?id=zottmann))
-2. Install it.
-3. Enable the plugin in your Obsidian settings under "Community plugins".
+### Using Obsidian community plugin browser
 
-That's it.
+1. Open **Settings → Community Plugins**
+2. Search for **Logcollector**
+3. Install and enable the plugin.
 
+### Manual Installation
 
-### Installation via <abbr title="Beta Reviewers Auto-update Tester">BRAT</abbr> (for pre-releases or betas)
-
-1. Install [BRAT](https://github.com/TfTHacker/obsidian42-brat).
-2. Add "Logstravaganza" to BRAT:
-    1. Open "Obsidian42 - BRAT" via Settings → Community Plugins
-    2. Click "Add Beta plugin"
-    3. Use the repository address `czottmann/obsidian-logstravaganza`
-3. Enable "Logstravaganza" under Settings → Options → Community Plugins
+1. Download `main.js` and `manifest.json` from the [latest release](https://github.com/AwkMan00/obsidian-logcollector/releases/latest)
+2. Copy them to `<your-vault>/.obsidian/plugins/obsidian-logcollector/`
+3. Enable the plugin in **Settings → Community Plugins**
 
 
 ## Development
@@ -153,18 +170,13 @@ Clone the repository, run `pnpm install` OR `npm install` to install the depende
 
 ## Author
 
-Carlo Zottmann, <carlo@zottmann.dev>, https://c.zottmann.dev/
+Deimos Ibáñez
 
-My Obsidian plugins: https://obsidian.md/plugins?search=zottmann
+## Acknowledgements
 
-### Logstravaganza is brought to you by …
+Carlo Zottmann, for creating the Logstravanza plugin from which this plugins is forked from, and all its contributors.
 
-[**Actions for Obsidian**](https://actions-for-obsidian.com?ref=github), a macOS/iOS app also made by me! AFO is the missing link between Obsidian and macOS / iOS: 50+ Shortcuts actions to bring your notes and your automations together. [Take a look!](https://actions.work/actions-for-obsidian?ref=github)
-
-
-## Contributors
-
-- [@fyears](https://github.com/fyears) ([PR#11](https://github.com/czottmann/obsidian-logstravaganza/pull/11), [PR#12](https://github.com/czottmann/obsidian-logstravaganza/pull/12))
+To FolderBridge plugin developers, whose code was used to open the file explorer for selecting a folder outside Obsidian vaults.
 
 
 ## Disclaimer

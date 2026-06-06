@@ -5,6 +5,7 @@ import { prefixMsg } from "./utils";
 // Storing the original `window.*` object so we can restore them later
 const WINDOW_CONSOLE = window.console;
 
+
 /**
  * A class that sets up a proxy for the `console` object to intercept log
  * events, which are added to the passed-in queue.
@@ -54,22 +55,16 @@ export class ConsoleProxy {
 
     // Listen for uncaught exceptions
     window.addEventListener("error", this.onWindowError.bind(this));
-    window.addEventListener(
-      "unhandledrejection",
-      this.onWindowUnhandledRejection.bind(this),
-    );
+    window.addEventListener("unhandledrejection", this.onWindowUnhandledRejection.bind(this));
 
     return this;
   }
 
   // Removing the console proxy object and the listener for uncaught errors
   public teardown(): void {
-    window.console = WINDOW_CONSOLE;
     window.removeEventListener("error", this.onWindowError.bind(this));
-    window.removeEventListener(
-      "unhandledrejection",
-      this.onWindowUnhandledRejection.bind(this),
-    );
+    window.removeEventListener("unhandledrejection", this.onWindowUnhandledRejection.bind(this));
+    window.console = WINDOW_CONSOLE;
 
     console.info(prefixMsg("Proxy removed"));
   }

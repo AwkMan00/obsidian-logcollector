@@ -1,11 +1,14 @@
-export interface LogstravaganzaSettings {
-  fileNameContainsDate: boolean;
+export interface LogcollectorSettings {
   formatterID: string;
+  folderIsExt: boolean;
   outputFolder: string;
+  outputExtFolder: string;
+  fileNameContainsDate: boolean;
+  printInUTCtime: boolean;
   logLevel: LogLevel;
 
   /**
-   * By default, Logstravanganza will debounce write operations to the file to
+   * By default, Logcollector will debounce write operations to the file to
    * avoid excessive writes. This is done by default to improve performance.
    * Setting this to `false` will write the log events immediately to the file,
    * likely resulting in a performance hit. (Personally, I disable this option

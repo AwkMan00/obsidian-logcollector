@@ -1,3 +1,6 @@
+#dist folder
+dist
+
 # vscode
 .vscode 
 
@@ -20,3 +23,6 @@ data.json
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
+
+#Vim files
+.*.swp

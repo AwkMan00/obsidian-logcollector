@@ -27,7 +27,7 @@ export function getDeviceName(app: App): string {
  * @returns The prefixed message.
  */
 export function prefixMsg(msg: string): string {
-  return `[Logstravaganza] ${msg}`;
+  return `[Logcollector] ${msg}`;
 }
 
 /**

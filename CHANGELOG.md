@@ -1,5 +1,13 @@
 # Release history
 
+## 3.0.0, 2026-06-06
+
+- Added capability to place the log file outside the vault (avoids crashing Obsidian if there are too many entries).
+- Added option to save the log file inside the vault (as in previous versions).
+- Added option to save log timestamps in local time (default) or UTC.
+- Added new option to write messages in plain text format.
+- Added `Known issues` section in README.
+
 ## 2.3.0, 2025-11-18
 
 Chore release, updating dependencies for security.
