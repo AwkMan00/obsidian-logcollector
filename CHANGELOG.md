@@ -2,6 +2,9 @@
 
 ## 3.0.0, 2026-06-06
 
+First version of Logcollector plugin.
+Starts at version 3.0.0 as it is the next major version from the forked plugin.
+
 - Added capability to place the log file outside the vault (avoids crashing Obsidian if there are too many entries).
 - Added option to save the log file inside the vault (as in previous versions).
 - Added option to save log timestamps in local time (default) or UTC.
