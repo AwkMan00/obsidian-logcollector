@@ -7,7 +7,7 @@ import { LogEventsFormatter } from "../types";
 export default <LogEventsFormatter> {
   id: "mdcodeblocks",
   title: "Markdown Code Blocks",
-  description: "Generates a Markdown file containing code blocks.",
+  description: "Generates a Markdown file containing code blocks",
   fileExt: "md",
 
   format: ({ timestamp, level, sender, args }) => {

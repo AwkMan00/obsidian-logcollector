@@ -103,11 +103,11 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 	      attr: { style: "margin-block-start: 0; padding-inline-start: 2em;" },
 	    });
 	    formatters.forEach((f) => {
-	      ul.createEl("li", { attr: { style: "margin-bottom: 0.5rem;" } })
-	        .innerHTML = `
-	          <strong>${f.title}</strong>: ${f.description}.<br>
-	          File extension: <code>.${f.fileExt}</code>
-	        `;
+		 ul.createEl("li",{ attr: { style: "margin-bottom: 0.5rem;font-weight: bold;" } })
+			.innerText = `${f.title}`;
+		 ul.createEl("div",{ attr: { style: "margin-bottom: 0.5rem;" } })
+			.innerText = `${f.description}
+			File extension: .${f.fileExt}`;
 	    });
 	
 	    // Option to set whether to save inside or outside the vault
@@ -273,7 +273,7 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 	          });
 	      });
 	
-	    containerEl.createEl("h5", { text: "Output file" });
+		new Setting(containerEl).setName("Output file").setHeading()
 	}
 
     // Display & link output file path

@@ -1,5 +1,5 @@
-/* File will be overwritten by bin/release.sh! */
+/* File will be overwritten by ./scripts/build.sh! */
 export const PLUGIN_INFO = {
   "pluginVersion": "3.0.0",
-  "pluginReleasedAt": "2026-06-06T19:00:00+0200"
+  "pluginReleasedAt": "2026-06-06T22:07:33+0200"
 }
