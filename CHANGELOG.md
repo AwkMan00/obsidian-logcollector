@@ -1,5 +1,9 @@
 # Release history
 
+## 3.0.1, 2026-06-06
+
+Updated dependencies and fixed issues in Obsidian automated checks for plugin publication.
+
 ## 3.0.0, 2026-06-06
 
 First version of Logcollector plugin.

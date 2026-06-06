@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="3.0.0"
+VERSION="3.0.1"
 
 #Get script path
 SCRIPTPATH="$(dirname $(realpath $0))"
