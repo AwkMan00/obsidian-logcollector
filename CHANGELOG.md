@@ -1,5 +1,9 @@
 # Release history
 
+## 3.0.2, 2026-06-07
+
+Fixed several warnings in Obsidian automatic plugin checks.
+
 ## 3.0.1, 2026-06-06
 
 Updated dependencies and fixed issues in Obsidian automated checks for plugin publication.

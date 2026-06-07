@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="3.0.1"
+VERSION="3.0.2"
 
 #Get script path
 SCRIPTPATH="$(dirname $(realpath $0))"
@@ -30,13 +30,9 @@ sed -i '/pluginVersion/s/: ".*"/: "'$VERSION'"/' src/plugin-info.json src/plugin
 sed -i '/"version":/s/: ".*"/: "'$VERSION'"/' manifest.json
 sed -i '/"version":/s/: ".*"/: "'$VERSION'"/' package.json
 
-#Change version in package-lock.json
-sed -i '3s/: ".*"/: "'$VERSION'"/' package-lock.json 
-sed -i '9s/: ".*"/: "'$VERSION'"/' package-lock.json 
-
 
 #Build application
-npm run build
+pnpm run build
 if [[ $? -ne 0 ]]
 then
 	echo "Error building package"
@@ -45,8 +41,8 @@ fi
 
 #Create zip package with distribution files and source code
 rm -f dist/obsidian-logcollector*.zip dist/obsidian-logcollector*.tar.gz
-7z a -mx=9 dist/obsidian-logcollector-src-${VERSION}.zip CHANGELOG.md esbuild.config.mjs .eslintrc LICENSE.md package.json README.md src versions.json data.json .editorconfig .eslintignore .gitignore manifest.json .npmrc package-lock.json scripts tsconfig.json
-tar -cvzf dist/obsidian-logcollector-src-${VERSION}.tar.gz CHANGELOG.md esbuild.config.mjs .eslintrc LICENSE.md package.json README.md src versions.json data.json .editorconfig .eslintignore .gitignore manifest.json .npmrc package-lock.json scripts tsconfig.json
+7z a -mx=9 dist/obsidian-logcollector-src-${VERSION}.zip CHANGELOG.md esbuild.config.mjs .eslintrc LICENSE.md package.json README.md src versions.json data.json .editorconfig .eslintignore .gitignore manifest.json scripts tsconfig.json
+tar -cvzf dist/obsidian-logcollector-src-${VERSION}.tar.gz CHANGELOG.md esbuild.config.mjs .eslintrc LICENSE.md package.json README.md src versions.json data.json .editorconfig .eslintignore .gitignore manifest.json scripts tsconfig.json
 
 cd dist
 7z a -mx=9 obsidian-logcollector-dist-${VERSION}.zip main.js manifest.json

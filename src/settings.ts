@@ -2,6 +2,7 @@ import { App, PluginSettingTab, Setting, Notice, TFolder } from "obsidian";
 import Logcollector from "./main";
 import { formatters } from "./formatters";
 import { getObsidianURI } from "./utils";
+import { existsSync } from "fs";
 
 
 // START section imported from Folder Bridge Obsidian extension
@@ -104,13 +105,9 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 	    });
 	    formatters.forEach((f) => {
 		 //This code replaces the usage of "innerHTML (where HTML code was set directly).
-		 //We use the 'p' instead of 'li' because it does not add a new line after the end of the text
 		 ul.createEl("p",{ attr: { style: "margin-bottom: 0.5rem;font-weight: bold;"} , text: `• ${f.title} ` });
-		 ul.createEl("t",{ attr: { style: "margin-bottom: 0.5rem;"} ,
-			text: `${f.description}
-			File extension: `;
-			});
-		 ul.createEl("code",{ attr: { style: "margin-bottom: 0.5rem;"} text: `.${f.fileExt}`});
+		 ul.createEl("div",{ attr: { style: "margin-bottom: 0.5rem;"}, text: `${f.description}` });
+		 ul.createEl("div",{ attr: { style: "margin-bottom: 0.5rem;"}, text: `File extension: .${f.fileExt}`}); 
 	    });
 	
 	    // Option to set whether to save inside or outside the vault
@@ -153,9 +150,8 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 					.setTooltip('Open the system folder picker')
 					.onClick(() => {
 						void (async () => {
-							var fs = require('fs');
 							let selected;
-							if (fs.existsSync(plugin.settings.outputExtFolder)) {
+							if (existsSync(plugin.settings.outputExtFolder)) {
 								//Open in current selected folder (if it exists)
 								selected = await browseFolderOnDisk('Select external folder',plugin.settings.outputExtFolder);
 							} else {
@@ -290,7 +286,7 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 	const link = plugin.settings.folderIsExt?"":getObsidianURI(this.app.vault, filename);
 
 	 if (plugin.fileLinkHTML != null ) {
-		plugin.fileLinkHTML.textContent = filename;
+		plugin.fileLinkHTML.text = filename;
      	if (plugin.settings.folderIsExt == false ) {
 			plugin.fileLinkHTML.attr = {href: link};
 		}
@@ -298,11 +294,11 @@ export class LogcollectorSettingTab extends PluginSettingTab {
      	if (plugin.settings.folderIsExt == true ) {
   	      plugin.fileLinkHTML = containerEl
 				.createEl("p", { text: "→ " })
-	      		.createEl("a", { text: filename,  attr: { href: null } });
+	      		.createEl("a", { text: filename,  attr: { href: null, readOnly: false } });
   	   } else {
   		      plugin.fileLinkHTML = containerEl
     	    	.createEl("p", { text: "→ " })
-      			.createEl("a", { text: filename, attr: { href: link } });
+      			.createEl("a", { text: filename, attr: { href: link, readOnly: false } });
        }
 	 }
   }

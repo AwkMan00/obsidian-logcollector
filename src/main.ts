@@ -1,4 +1,4 @@
-import { normalizePath, Notice, Platform, Plugin } from "obsidian";
+import { normalizePath, Notice, Platform, Plugin, TFile } from "obsidian";
 import { ConsoleProxy } from "./console-proxy";
 import { findFormatterByID } from "./formatters";
 import { PLUGIN_INFO } from "./plugin-info";
@@ -12,7 +12,7 @@ import {
   prefixMsg,
 } from "./utils";
 import { getTimezoneOffset } from "date-fns-tz";
-import { createWriteStream, type WriteStream } from "fs";
+import { createWriteStream, type WriteStream } from 'fs'
 
 
 const DEFAULT_SETTINGS: LogcollectorSettings = {
@@ -34,7 +34,7 @@ export default class Logcollector extends Plugin {
   declare settings: LogcollectorSettings;
   outputFileBasename: string = `console-log.${this.deviceName}`;
   outputExtFileHandler: WriteStream | null = null;
-  fileLinkHTML: HTMLElement | null = null;
+  fileLinkHTML: any = null;
   timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   async onload() {
@@ -122,7 +122,8 @@ export default class Logcollector extends Plugin {
       const formatter = findFormatterByID(this.settings.formatterID)!;
       const filename = this.getOutputFilename(formatter.fileExt);
 
-	  let fileInt: (note instanceof TFile);
+	  //The exclamation mark is to avoid the warning "variable is used before it is assigned"
+	  let fileInt!: TFile;
 
       // Retrieve the file
 	  if (this.settings.folderIsExt == true ) {
@@ -130,11 +131,15 @@ export default class Logcollector extends Plugin {
 			  try {
 				  //var fs = require('fs');
 				  this.outputExtFileHandler = await createWriteStream(filename, {flags: 'a'});
-				  //This code is necessary to catch error when opening file (e.g. when directory does not exists)
-				  this.outputExtFileHandler.on('error', function(err:Error) {
-					new Notice(err.message);
-					this.outputExtFileHandler = null;
-				  });
+				  if (this.outputExtFileHandler != null) {
+					  //This code is necessary to catch error when opening file (e.g. when directory does not exists)
+					  this.outputExtFileHandler.on('error', function(err:Error) {
+						new Notice(err.message);
+						this.outputExtFileHandler = null;
+					  });
+				  } else {
+					  new Notice("Unknown error opening file " + filename);
+				  }
 			  } catch(e:unknown) {
 				new Notice("Error opening file " + filename + ". Error is: " + (e as Error).message);
 				this.outputExtFileHandler = null;

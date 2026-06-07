@@ -1,6 +1,6 @@
 {
   "name": "logcollector",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "A simple proxy for `console.*()` calls which copies log messages and uncaught exceptions to a note or file (inside or outside the vault).",
   "main": "main.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "cross-spawn": ">=7.0.5",
     "esbuild": "^0.25.0",
     "eslint": "^9.26.0",
-    "js-yaml": ">=4.1.1",
+    "yaml": ">=2.9.0",
     "obsidian": "^1.8.0",
     "tslib": "2.5.2",
     "typescript": "^5.9.0"
