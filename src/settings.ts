@@ -103,11 +103,14 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 	      attr: { style: "margin-block-start: 0; padding-inline-start: 2em;" },
 	    });
 	    formatters.forEach((f) => {
-		 ul.createEl("li",{ attr: { style: "margin-bottom: 0.5rem;font-weight: bold;" } })
-			.innerText = `${f.title}`;
-		 ul.createEl("div",{ attr: { style: "margin-bottom: 0.5rem;" } })
-			.innerText = `${f.description}
-			File extension: .${f.fileExt}`;
+		 //This code replaces the usage of "innerHTML (where HTML code was set directly).
+		 //We use the 'p' instead of 'li' because it does not add a new line after the end of the text
+		 ul.createEl("p",{ attr: { style: "margin-bottom: 0.5rem;font-weight: bold;"} , text: `• ${f.title} ` });
+		 ul.createEl("t",{ attr: { style: "margin-bottom: 0.5rem;"} ,
+			text: `${f.description}
+			File extension: `;
+			});
+		 ul.createEl("code",{ attr: { style: "margin-bottom: 0.5rem;"} text: `.${f.fileExt}`});
 	    });
 	
 	    // Option to set whether to save inside or outside the vault
@@ -283,11 +286,11 @@ export class LogcollectorSettingTab extends PluginSettingTab {
 	const filename = plugin.getOutputFilename(fileExt);
 
 	//Links to local files are forbidden due to security reasons, so for files outside
-	//the vault have no link
+	//the vault there will be no link
 	const link = plugin.settings.folderIsExt?"":getObsidianURI(this.app.vault, filename);
 
 	 if (plugin.fileLinkHTML != null ) {
-		plugin.fileLinkHTML.text = filename;
+		plugin.fileLinkHTML.textContent = filename;
      	if (plugin.settings.folderIsExt == false ) {
 			plugin.fileLinkHTML.attr = {href: link};
 		}

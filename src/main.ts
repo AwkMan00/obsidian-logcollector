@@ -12,6 +12,7 @@ import {
   prefixMsg,
 } from "./utils";
 import { getTimezoneOffset } from "date-fns-tz";
+import { createWriteStream, type WriteStream } from "fs";
 
 
 const DEFAULT_SETTINGS: LogcollectorSettings = {
@@ -30,11 +31,10 @@ export default class Logcollector extends Plugin {
   private proxy: ConsoleProxy;
   private deviceName: string = getDeviceName(this.app);
   
-
-  settings: LogcollectorSettings;
+  declare settings: LogcollectorSettings;
   outputFileBasename: string = `console-log.${this.deviceName}`;
-  outputExtFileHandler: any = null;
-  fileLinkHTML: any = null;
+  outputExtFileHandler: WriteStream | null = null;
+  fileLinkHTML: HTMLElement | null = null;
   timeZone: string = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   async onload() {
@@ -122,17 +122,17 @@ export default class Logcollector extends Plugin {
       const formatter = findFormatterByID(this.settings.formatterID)!;
       const filename = this.getOutputFilename(formatter.fileExt);
 
-	  let fileInt:any;
+	  let fileInt: (note instanceof TFile);
 
       // Retrieve the file
 	  if (this.settings.folderIsExt == true ) {
 		  if (this.outputExtFileHandler == null ) {
 			  try {
-				  var fs = require('fs');
-				  this.outputExtFileHandler = await fs.createWriteStream(filename, {flags: 'a'});
+				  //var fs = require('fs');
+				  this.outputExtFileHandler = await createWriteStream(filename, {flags: 'a'});
 				  //This code is necessary to catch error when opening file (e.g. when directory does not exists)
-				  this.outputExtFileHandler.on('error', function(err:string) {
-					new Notice(err);
+				  this.outputExtFileHandler.on('error', function(err:Error) {
+					new Notice(err.message);
 					this.outputExtFileHandler = null;
 				  });
 			  } catch(e:unknown) {
@@ -161,7 +161,10 @@ export default class Logcollector extends Plugin {
 		}
 	  if (this.settings.folderIsExt == true ) {
 	  	try {
-		  this.outputExtFileHandler.write(line);
+			if (this.outputExtFileHandler!=null) {
+				//Forced check due to compiler error
+				this.outputExtFileHandler.write(line);
+			}
 		} catch(e:unknown) {
 		  new Notice("Error writing to file " + filename + ". Error is: " + (e as Error).message);
 		}
