@@ -30,6 +30,18 @@ sed -i '/pluginVersion/s/: ".*"/: "'$VERSION'"/' src/plugin-info.json src/plugin
 sed -i '/"version":/s/: ".*"/: "'$VERSION'"/' manifest.json
 sed -i '/"version":/s/: ".*"/: "'$VERSION'"/' package.json
 
+#Check if current version is in versions.json file
+grep -q "\"$VERSION\"" versions.json
+if [[ $? -ne 0 ]]
+then
+	#Get obsidian version from package.json
+	OBSIDIAN_VERSION=$(awk -v FS='"' '/"obsidian":/ {a=$(NF-1);gsub(/[^0-9\.]/,"",a);printf "%s",a;exit}' package.json)
+	#Add new version in versions.json
+	awk -v version="$VERSION" -v obsidian="$OBSIDIAN_VERSION" '$0~/"[[:space:]]{0,}$/ {print $0",\n  \""version"\": \""obsidian"\"";next} {print}' versions.json > tmp
+	rm -f versions.json
+	mv tmp versions.json
+fi
+
 
 #Build application
 pnpm run build
