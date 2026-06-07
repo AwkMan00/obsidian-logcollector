@@ -1,6 +1,6 @@
 {
   "name": "logcollector",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "A simple proxy for `console.*()` calls which copies log messages and uncaught exceptions to a note or file (inside or outside the vault).",
   "main": "main.js",
   "scripts": {

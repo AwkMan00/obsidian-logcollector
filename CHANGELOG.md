@@ -1,5 +1,9 @@
 # Release history
 
+## 3.0.3, 2026-06-07
+
+Missing minimum compatible Obsidian version for the last two plugin versions in `versions.json` file.
+
 ## 3.0.2, 2026-06-07
 
 Fixed several warnings in Obsidian automatic plugin checks.
